@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="docTitle">Mon Journal Intime Privé</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Écran de verrouillage  -->
+  <div id="lock-overlay" class="lock-overlay" hidden>
+    <div class="lock-card">
+      <div class="lock-icon">🔒</div>
+      <h2 data-i18n="lockScreenTitle">Journal verrouillé</h2>
+      <p data-i18n="lockScreenText">Entrez votre code PIN pour accéder à vos notes.</p>
+      <form id="unlock-form" class="lock-form">
+        <input type="password" inputmode="numeric" pattern="[0-9]*" id="unlock-pin-input" class="pin-input" placeholder="••••" maxlength="12" autocomplete="off">
+        <button type="submit" class="btn btn-primary" data-i18n="unlockBtn">Déverrouiller</button>
+      </form>
+      <p id="unlock-error" class="lock-error" data-i18n="unlockError" hidden>Code PIN incorrect. Réessayez.</p>
+    </div>
+  </div>
+
+  <!-- En-tête -->
+  <header class="navbar">
+    <div class="logo">
+      <span>📖</span>
+      <span id="app-title" data-i18n="appTitle">Mon Journal</span>
+      <div class="lang-switcher" role="group" aria-label="Choix de la langue / Language choice">
+        <button type="button" class="lang-btn active" data-lang="fr" title="Français" aria-label="Français">🇫🇷</button>
+        <button type="button" class="lang-btn" data-lang="en" title="English" aria-label="English">🇬🇧</button>
+      </div>
+    </div>
+    <nav class="nav-links">
+      <button class="nav-btn active" data-i18n="navWrite" onclick="switchTab('editor-view')">Écrire</button>
+      <button class="nav-btn" data-i18n="navPrivacy" onclick="switchTab('privacy-view')">Confidentialité</button>
+      <button id="lock-now-btn" class="nav-btn btn-lock" onclick="lockNow()" data-i18n-title="lockNowTitle" title="Verrouiller le journal" hidden>🔒</button>
+    </nav>
+  </header>
+
+  <main class="container" id="main-content">
+
+    <!-- Vue 1 : Écriture et historique -->
+    <section id="editor-view" class="tab-content active">
+
+      <!-- Zone de création d'entrée -->
+      <div class="card editor-card">
+        <h2 data-i18n="editorTitle">Créer une nouvelle note</h2>
+        <div class="form-group">
+          <label for="entry-date" data-i18n="dateLabel">Date :</label>
+          <input type="date" id="entry-date" class="date-picker">
+        </div>
+        <div class="form-group">
+          <textarea id="entry-content" data-i18n-placeholder="contentPlaceholder" placeholder="Qu'avez-vous en tête aujourd'hui ?" maxlength="5000"></textarea>
+          <div class="char-counter"><span id="char-count">0</span> / 5000 <span data-i18n="charCounterSuffix">caractères</span></div>
+        </div>
+        <button class="btn btn-primary" id="save-btn" data-i18n="saveBtn">Enregistrer dans mon navigateur</button>
+      </div>
+
+      <!-- Liste des anciennes entrées -->
+      <div class="entries-section">
+        <h3 class="section-title" data-i18n="entriesTitle">Mes Notes Enregistrées</h3>
+        <div class="entries-grid" id="entries-container">
+          <!-- Les notes sont injectées dynamiquement par app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Vue 2 : Confidentialité  -->
+    <section id="privacy-view" class="tab-content">
+      <div class="card privacy-card">
+        <h2 data-i18n="privacyTitle">🔒 Vos données restent chez vous</h2>
+        <p class="privacy-highlight" data-i18n="privacyHighlight">Aucun serveur. Aucune inscription. 100% Privé.</p>
+
+        <div class="privacy-details">
+          <p data-i18n-html="privacyIntro">Ce journal utilise le <strong>stockage local de votre navigateur (localStorage)</strong>. Cela signifie que :</p>
+          <ul>
+            <li data-i18n="privacyItem1">Vos notes sont enregistrées directement dans la mémoire de votre ordinateur ou téléphone.</li>
+            <li data-i18n="privacyItem2">Aucune donnée ne transite par Internet ni n'est stockée sur un serveur distant.</li>
+            <li data-i18n="privacyItem3">Seule une personne ayant accès physiquement à votre session d'ordinateur ou votre profil de navigateur peut lire vos notes.</li>
+          </ul>
+          <p class="privacy-warning" data-i18n-html="privacyWarning">💡 <em>Conseil : Pour garder votre journal totalement secret, veillez à verrouiller votre session d'ordinateur (Mot de passe/Session Windows/Mac) lorsque vous vous absentez.</em></p>
+        </div>
+      </div>
+
+      <!-- Gestion du code PIN -->
+      <div class="card pin-settings-card">
+        <h3 data-i18n="pinTitle">🔑 Code PIN de protection</h3>
+        <p class="pin-explainer" data-i18n="pinExplainer">Ajoutez un code PIN pour qu'un écran de verrouillage s'affiche à chaque ouverture du journal. Ce code est stocké (haché) uniquement sur votre appareil : ce n'est pas un chiffrement fort, mais une protection contre les regards indiscrets.</p>
+
+        <!-- Etat : aucun PIN défini -->
+        <div id="pin-set-block" class="pin-block">
+          <div class="pin-fields">
+            <input type="password" inputmode="numeric" pattern="[0-9]*" id="new-pin-1" class="pin-input" data-i18n-placeholder="pinNewPlaceholder" placeholder="Nouveau code (4 à 12 chiffres)" maxlength="12">
+            <input type="password" inputmode="numeric" pattern="[0-9]*" id="new-pin-2" class="pin-input" data-i18n-placeholder="pinConfirmPlaceholder" placeholder="Confirmer le code" maxlength="12">
+          </div>
+          <button class="btn btn-gold" data-i18n="pinSetBtn" onclick="handleSetPin()">Définir un code PIN</button>
+          <p id="pin-set-error" class="lock-error" hidden></p>
+        </div>
+
+        <!-- Etat : un PIN est déjà défini -->
+        <div id="pin-manage-block" class="pin-block" hidden>
+          <p class="pin-active-msg" data-i18n="pinActiveMsg">✅ Un code PIN protège actuellement votre journal.</p>
+          <div class="pin-fields">
+            <input type="password" inputmode="numeric" pattern="[0-9]*" id="current-pin" class="pin-input" data-i18n-placeholder="pinCurrentPlaceholder" placeholder="Code PIN actuel" maxlength="12">
+          </div>
+          <div class="pin-fields">
+            <input type="password" inputmode="numeric" pattern="[0-9]*" id="changed-pin-1" class="pin-input" data-i18n-placeholder="pinChangedPlaceholder" placeholder="Nouveau code (optionnel)" maxlength="12">
+            <input type="password" inputmode="numeric" pattern="[0-9]*" id="changed-pin-2" class="pin-input" data-i18n-placeholder="pinChangedConfirmPlaceholder" placeholder="Confirmer le nouveau code" maxlength="12">
+          </div>
+          <div class="pin-actions">
+            <button class="btn btn-gold" data-i18n="pinChangeBtn" onclick="handleChangePin()">Modifier le code</button>
+            <button class="btn btn-secondary" data-i18n="pinRemoveBtn" onclick="handleRemovePin()">Supprimer le code PIN</button>
+          </div>
+          <p id="pin-manage-error" class="lock-error" hidden></p>
+          <p id="pin-manage-success" class="pin-success" hidden></p>
+        </div>
+      </div>
+
+      <!-- Sauvegarde et restauration -->
+      <div class="card data-management-card">
+        <h3 data-i18n="dataTitle">📦 Sauvegarde & Restauration des données</h3>
+        <p data-i18n="dataText">Téléchargez une copie de vos notes sur votre ordinateur pour ne jamais les perdre, ou transférez-les vers un autre appareil.</p>
+
+        <div class="data-actions">
+          <button class="btn btn-gold" data-i18n="exportBtn" onclick="exportEntriesJSON()">
+            💾 Exporter mes notes (.json)
+          </button>
+
+          <label class="btn btn-secondary file-label">
+            <span data-i18n="importBtn">📂 Importer une sauvegarde</span>
+            <input type="file" id="import-file" accept=".json" onchange="importEntriesJSON(event)" hidden>
+          </label>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Script pour basculer d'onglet -->
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
