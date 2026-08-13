@@ -1,29 +1,29 @@
-### Journal Local Web & 100% Privé
+# Journal Local Web & 100% Privé
 Journal Local est une application web moderne, légère et entièrement sécurisée, conçue pour vous offrir un espace d'écriture intime sans compromis sur la confidentialité. Sans création de compte ni serveur distant, vos réflexions et vos notes personnelles restent physiquement stockées sur votre appareil.
 https://fannyltd.github.io/JournalLocal/
 
 ## Fonctionnalités
-# Confidentialité Totale (Stockage 100% Local)
+### Confidentialité Totale (Stockage 100% Local)
 
 Aucune donnée ne quitte votre ordinateur. L'application utilise les capacités de stockage local du navigateur (localStorage), garantissant zéro serveur externe, zéro cookie publicitaire et zéro traçage.
 
-# Verrouillage par Code PIN (Hachage & Salage)
+### Verrouillage par Code PIN (Hachage & Salage)
 
 Protection renforcée contre les regards indiscrets : l'accès au journal peut être verrouillé par un code PIN à 4 chiffres. Le code est sécurisé localement grâce à une méthode de hachage avec sel (Hash + Salt), empêchant toute lecture directe du code PIN en clair dans la mémoire du navigateur. Attention : cela reste une protection basique, pas de chiffrement fort. Les notes en elles-mêmes ne sont pas chiffrés sur le disque, seul l'accès à l'interface l'est.
 
-# Bilingue (Français & Anglais)
+### Bilingue (Français & Anglais)
 
 Interface multilingue fluide basée sur un dictionnaire de traduction personnalisé. Basculez d'une langue à l'autre en un seul clic sans recharger la page.
 
-# Exportation & Importation JSON
+### Exportation & Importation JSON
 
 Gardez le contrôle total sur vos données. Exportez facilement l'intégralité de vos écrits dans un fichier .json pour effectuer une sauvegarde de sécurité ou transférer vos notes vers un autre appareil. La fonction d'importation permet de restaurer une ancienne sauvegarde sans écraser vos données existantes.
 
- Design
+### Design
 
-Une interface raffinée déclinée autour d'une palette aux tons bordeaux, rose vif et accents dorés/bronze, pensée pour offrir une expérience d'écriture fluide.
+Une interface autour d'une palette aux tons bordeaux, rose vif et accents dorés/bronze, pensée pour une expérience d'écriture fluide.
 
-## Stack Technique
+### Stack Technique
 HTML5 — Structure sémantique et accessible.
 
 CSS3 — Architecture basée sur les variables CSS (:root), Flexbox/Grid et une mise en page entièrement responsive.
