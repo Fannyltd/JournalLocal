@@ -1,5 +1,6 @@
 ### Journal Local Web & 100% Privé
 Journal Local est une application web moderne, légère et entièrement sécurisée, conçue pour vous offrir un espace d'écriture intime sans compromis sur la confidentialité. Sans création de compte ni serveur distant, vos réflexions et vos notes personnelles restent physiquement stockées sur votre appareil.
+https://fannyltd.github.io/JournalLocal/
 
 ## Fonctionnalités
 # Confidentialité Totale (Stockage 100% Local)
